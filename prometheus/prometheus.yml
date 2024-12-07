@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoreo
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+        metrics_path: /services/prometheus/metrics
+      # Configuración para Node Exporter
+      - job_name: 'node-exporter'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - mundose
+        relabel_configs:
+          - action: keep
+            source_labels: [__meta_kubernetes_pod_label_app]
+            regex: node-exporter
+
+      # Configuración para Nginx Exporter
+      - job_name: 'nginx-exporter'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - mundose
+        metrics_path: /metrics
+        relabel_configs:
+          - action: keep
+            source_labels: [__meta_kubernetes_pod_label_app]
+            regex: nginx
+          - source_labels: [__meta_kubernetes_pod_container_port_number]
+            action: keep
+            regex: "9113"
+      # Configuración para Grafana
+      - job_name: 'grafana'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - monitoreo
+        metrics_path: /metrics
+        relabel_configs:
+          - action: keep
+            source_labels: [__meta_kubernetes_pod_label_app]
+            regex: grafana

@@ -1,0 +1,78 @@
+pipeline {
+    /* Definimos el pipeline */
+    environment {
+        /* Definimos las variables de entorno */
+        IMAGEN = "front-pinfinal" /* Cambiamos el nombre de la imagen de Docker a nginx */
+        USUARIO = 'DOCKERHUB_CREDENTIAL' /* Nombre de usuario de Docker Hub */
+        DOCKER_USER='szebastian001' /* Nombre de usuario de Docker Hub */
+    }
+    agent any /* Indicamos que el agente puede ser cualquiera de los disponibles, en este caso el que tenga Docker instalado */
+    stages { /* Definimos las etapas del pipeline */
+        stage('Clone') { /* Etapa de clonación del repositorio */
+            steps {
+                git branch: "main", url: 'https://github.com/Szebastian/Devops-Pin-Final.git' /* Clonamos el repositorio de GitHub */
+            }
+        }
+        stage('Build') { /* Etapa de construcción de la imagen de Docker */
+            steps {
+                script {
+                    newApp = docker.build("${DOCKER_USER}/$IMAGEN:$BUILD_NUMBER","nginx/") /* Especifica la ruta correcta al Dockerfile */
+                }
+            }
+        }
+
+        stage('Test') { /* Etapa de pruebas */
+            steps {
+                script {
+                    docker.image("${DOCKER_USER}/$IMAGEN:$BUILD_NUMBER").inside('-u root') { /* Ejecutamos un contenedor de Docker con la imagen construida */
+                           sh 'nginx -v' /* Cambiamos el comando a 'nginx -v' para verificar la versión de nginx dentro del contenedor */
+                        }
+                    }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.withRegistry( '', USUARIO ) { /* Autenticamos con Docker Hub utilizando el nombre de usuario */
+                        newApp.push() /* Subimos la imagen de Docker al repositorio de Docker Hub */
+                    }
+                }
+            }
+        }
+        stage('Prepare Kubernetes Deployment') {
+            steps {
+                script {
+                    sh '''
+                    sed -i "s|image: szebastian001/front-pinfinal:cambiartag|image: szebastian001/front-pinfinal:${BUILD_NUMBER}|" nginx/nginx-deployment.yaml
+                    '''
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh '''
+                    export KUBECONFIG=/var/jenkins_home/.kube/config
+                    kubectl apply -f nginx/nginx-deployment.yaml --namespace=mundose
+                    '''
+                }
+            }
+        }
+        stage('Deploy Ingress') {
+            steps {
+                script {
+                    sh '''
+                    export KUBECONFIG=/var/jenkins_home/.kube/config
+                    kubectl apply -f nginx/nginx-ingress.yaml --namespace=mundose
+                    '''
+                }
+            }
+        }
+        stage('Clean Up') { /* Etapa de limpieza */
+            steps {
+                sh "docker rmi -f ${DOCKER_USER}/$IMAGEN:$BUILD_NUMBER" /* Eliminamos la imagen de Docker localmente */
+            }
+        }
+    }
+}
