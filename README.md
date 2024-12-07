@@ -1,6 +1,6 @@
 # Proyecto Integrador Final - PIN
 
-## Integrantes Grupo 21:
+## Integrantes del Grupo 21:
 - Sebastián Contreras
 - Tomás Santiago Moreno Juárez
 
@@ -16,97 +16,92 @@
    - Configuración de Prometheus y Grafana
 6. [Links y Repositorios](#links-y-repositorios)
 7. [Resolución de Problemas](#resolución-de-problemas)
-   - En caso de haberlos
+   - Soluciones a los problemas encontrados
 8. [Referencias](#referencias)
-   - Documentación utilizada
-   - Enlaces útiles
+   - Documentación y enlaces útiles
 
 ---
 
 ## Introducción
 
-El presente proyecto tiene como objetivo integrar una solución DevOps utilizando tecnologías modernas como Kubernetes, Docker, Jenkins, Prometheus y Grafana. Este proyecto busca la implementación de un sistema de monitoreo de aplicaciones y servicios desplegados en un clúster Kubernetes.
+Este proyecto tiene como objetivo integrar una solución DevOps utilizando herramientas modernas como Kubernetes, Docker, Jenkins, Prometheus y Grafana, con el propósito de implementar un sistema de monitoreo para aplicaciones y servicios desplegados en un clúster Kubernetes. 
 
-La solución fue diseñada para proporcionar una infraestructura automatizada que permite recolectar y visualizar métricas de los servicios del clúster, con un enfoque particular en la monitorización continua mediante herramientas de recolección de datos y su visualización en tiempo real.
+La solución fue diseñada para proporcionar una infraestructura automatizada que permite la recolección y visualización en tiempo real de métricas de los servicios del clúster. El proyecto hace énfasis en la monitorización continua, utilizando herramientas de recolección de datos y su visualización en dashboards interactivos para facilitar la gestión y análisis de la infraestructura.
 
 ---
 
 ## Diagrama de Arquitectura
 
-La arquitectura del proyecto se basa en la integración de las siguientes herramientas clave:
+La arquitectura del proyecto está compuesta por las siguientes herramientas clave:
 
-- **Minikube**: Clúster de Kubernetes local.
-- **Docker**: Plataforma de contenedores.
-- **Jenkins**: Para la integración y entrega continua.
-- **Prometheus**: Sistema de monitoreo de métricas.
-- **Grafana**: Herramienta de visualización de métricas.
+- **Minikube**: Clúster Kubernetes local para pruebas y desarrollo.
+- **Docker**: Plataforma de contenedores utilizada para crear y gestionar aplicaciones dentro del clúster.
+- **Jenkins**: Herramienta de integración continua y entrega continua (CI/CD), responsable de automatizar los pipelines de despliegue.
+- **Prometheus**: Sistema de monitoreo de métricas en tiempo real, encargado de recolectar datos sobre los servicios y nodos del clúster.
+- **Grafana**: Plataforma de visualización de métricas que se conecta a Prometheus para generar dashboards interactivos.
 
-El diagrama de arquitectura ilustra cómo estas herramientas interactúan entre sí para crear una solución eficiente y escalable.
+El diagrama de arquitectura ilustra cómo estas herramientas interactúan para ofrecer una solución eficiente, escalable y automatizada.
 
 ---
 
 ## Herramientas Utilizadas
 
-- **Minikube**: Para crear un clúster de Kubernetes local.
-- **Docker**: Utilizado para crear contenedores de aplicaciones.
-- **Jenkins**: Plataforma para gestionar los pipelines de integración continua y despliegue continuo (CI/CD).
-- **GitHub**: Repositorio para almacenar el código fuente y las definiciones de los pipelines.
-- **Prometheus**: Herramienta de monitoreo para recolectar métricas en tiempo real.
-- **Grafana**: Plataforma de visualización de métricas que se conecta a Prometheus.
+- **Minikube**: Utilizado para crear un clúster Kubernetes local, lo que facilita el desarrollo y la ejecución de pruebas en un entorno controlado.
+- **Docker**: Herramienta fundamental para la creación de contenedores de aplicaciones, lo que permite la portabilidad y escalabilidad de los servicios.
+- **Jenkins**: Usado para gestionar los pipelines de integración y entrega continua, automatizando tareas de despliegue y monitoreo.
+- **GitHub**: Repositorio que aloja el código fuente y las definiciones de los pipelines.
+- **Prometheus**: Herramienta de monitoreo encargada de recolectar métricas de los servicios y nodos del clúster en tiempo real.
+- **Grafana**: Plataforma de visualización que permite crear dashboards interactivos para analizar las métricas recolectadas por Prometheus.
 
 ---
 
 ## Proceso de Implementación
 
 ### 1. **Configuración del Clúster Local**
-Se configuró un clúster local de Kubernetes utilizando Minikube. Esto permitió el desarrollo y prueba de los servicios en un entorno aislado.
-
-- Se configuró la IP del clúster para permitir la resolución del dominio `front-pinfinal.com`.
+Se configuró un clúster de Kubernetes local utilizando Minikube. Esto permitió trabajar en un entorno aislado y seguro, ideal para desarrollo y pruebas. Además, se configuró la IP del clúster para la correcta resolución del dominio `front-pinfinal.com`.
 
 ### 2. **Configuración de Jenkins**
-Jenkins fue instalado y configurado con los siguientes pasos:
+Jenkins fue instalado y configurado para interactuar con Kubernetes y Docker. Los pasos clave fueron:
 
-- Instalación de plugins necesarios para interactuar con Docker y Kubernetes.
-- Conexión a GitHub para obtener las definiciones de los pipelines y el código fuente.
+- Instalación de los plugins necesarios para la integración con Docker y Kubernetes.
+- Conexión con el repositorio de GitHub para obtener las definiciones de los pipelines y el código fuente de las aplicaciones.
 
 ### 3. **Ejecución de Pipelines**
-Se automatizaron los siguientes procesos mediante Jenkins:
+Se automatizaron los siguientes pipelines con Jenkins:
 
-- **deploy-nginx-exporter-cluster-pin-final-mundose**: Despliegue de un contenedor **NGINX Exporter** para la recolección de métricas de NGINX.
-  
-- **prometheus-cluster-monitoreo-pin-final-mundose**: Despliegue de Prometheus y Node Exporter para recolectar métricas de servicios y nodos en el clúster.
-
-- **grafana-cluster-monitoreo-pin-final-mundose**: Despliegue de Grafana y configuración para conectarse a Prometheus y visualizar las métricas.
+- **deploy-nginx-exporter-cluster-pin-final-mundose**: Despliegue de un contenedor **NGINX Exporter** para la recolección de métricas relacionadas con NGINX.
+- **prometheus-cluster-monitoreo-pin-final-mundose**: Despliegue de **Prometheus** y **Node Exporter** en el clúster para la recolección de métricas de servicios y nodos.
+- **grafana-cluster-monitoreo-pin-final-mundose**: Despliegue de **Grafana** y configuración de la conexión con **Prometheus** para la visualización de métricas.
 
 ---
 
 ## Monitoreo y Visualización
 
-**Prometheus** se configuró para recolectar métricas de los servicios y nodos del clúster. La interfaz de Prometheus se encuentra disponible en la siguiente URL:
+**Prometheus** fue configurado para recolectar métricas en tiempo real desde los servicios y nodos dentro del clúster. La interfaz de **Prometheus** está disponible en:
 
-- **Prometheus**: [http://dev-env.grupo13.com/services/prometheus](http://front-pinfinal.com/services/prometheus)
+- **Prometheus**: [http://front-pinfinal.com/services/prometheus](http://front-pinfinal.com/services/prometheus)
 
-**Grafana** fue configurado para visualizar las métricas de Prometheus en dashboards interactivos. La interfaz de Grafana está disponible en:
+**Grafana** fue configurado para crear dashboards interactivos que visualizan las métricas de **Prometheus**. Esto permite un análisis detallado de la infraestructura y servicios del clúster. La interfaz de **Grafana** está disponible en:
 
-- **Grafana**: [http://dev-env.grupo13.com/services/grafana](http://szebastian001/front-pinfinal/services/grafana)
+- **Grafana**: [http://szebastian001/front-pinfinal/services/grafana](http://szebastian001/front-pinfinal/services/grafana)
 
 ---
 
 ## Links y Repositorios
 
 - **Repositorio del Proyecto**: [GitHub - DevOps Pin Final](https://github.com/Szebastian/Devops-Pin-Final)
-- **URL de Grafana**: [http://dev-env.grupo13.com/services/grafana](http://szebastian001/front-pinfinal/services/grafana)
-- **URL de Prometheus**: [http://dev-env.grupo13.com/services/prometheus](http://front-pinfinal.com/services/prometheus)
+- **URL de Grafana**: [http://szebastian001/front-pinfinal/services/grafana](http://szebastian001/front-pinfinal/services/grafana)
+- **URL de Prometheus**: [http://front-pinfinal.com/services/prometheus](http://front-pinfinal.com/services/prometheus)
 
 ---
 
 ## Resolución de Problemas
 
-Durante la implementación se presentaron los siguientes problemas:
+Durante la implementación del proyecto, se presentaron varios problemas que fueron solucionados con los siguientes enfoques:
 
-- **Problema de conexión entre Jenkins y Kubernetes**: Se resolvió ajustando la configuración del archivo kubeconfig para asegurar que Jenkins pudiera acceder al clúster de Minikube.
+- **Problema de Conexión entre Jenkins y Kubernetes**: La configuración de **kubeconfig** fue ajustada para asegurar que Jenkins pudiera acceder correctamente al clúster de Minikube.
   
-- **Problema con la conexión de Grafana a Prometheus**: Inicialmente, Grafana no lograba conectarse a Prometheus debido a configuraciones erróneas de URL y credenciales. Estos problemas fueron solucionados revisando y ajustando las configuraciones en ambos servicios.
+- **Problema de Conexión entre Grafana y Prometheus**: Inicialmente, Grafana no podía conectarse a Prometheus debido a configuraciones erróneas de URL y credenciales. Este problema fue resuelto revisando y ajustando las configuraciones en ambos servicios.
 
 ---
 
@@ -118,6 +113,3 @@ Durante la implementación se presentaron los siguientes problemas:
 - **Documentación de Prometheus**: [https://prometheus.io/docs/](https://prometheus.io/docs/)
 - **Documentación de Grafana**: [https://grafana.com/docs/](https://grafana.com/docs/)
 
----
-
-Este documento describe detalladamente los pasos y herramientas utilizadas para implementar una solución DevOps completa con integración continua, despliegue continuo y monitoreo utilizando las tecnologías mencionadas.
